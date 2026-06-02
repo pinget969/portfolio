@@ -1,0 +1,91 @@
+<section class="py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" id="projects">
+  <div class="text-center max-w-3xl mx-auto mb-16">
+    <span
+      class="text-xs font-bold uppercase tracking-widest text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20"
+      >Casos Reales</span
+    >
+    <h2 class="text-3xl sm:text-4xl font-extrabold mt-3">
+      Proyectos en Producción de Alto Impacto
+    </h2>
+    <p class="text-slate-400 mt-3 text-base">
+      Mis creaciones reales estructuradas bajo la metodología ágil <strong>STAR</strong> (Situación,
+      Tarea, Acción, Resultado). Hacé clic en los enlaces para probarlos vos mismo.
+    </p>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    @for (project of projects; track project.id) {
+      <div class="glass-panel glass-panel-hover rounded-2xl overflow-hidden flex flex-col justify-between">
+        <div>
+          <div
+            class="h-44 bg-gradient-to-br from-slate-900 relative flex items-center justify-center border-b border-white/5"
+            [class]="'bg-gradient-to-br from-slate-900 ' + project.gradientTo"
+          >
+            <div
+              class="absolute inset-0 opacity-10 bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:16px_16px]"
+            ></div>
+            <div class="text-center">
+              <i [class]="project.categoryIcon + ' text-5xl mb-2 ' + project.categoryColor"></i>
+              <div [class]="'text-xs font-mono font-bold tracking-widest ' + project.categoryColor">
+                {{ project.category }}
+              </div>
+            </div>
+            <span
+              class="absolute top-4 right-4 px-2 py-1 rounded bg-indigo-500/20 text-indigo-300 text-[10px] uppercase tracking-wider font-bold border border-indigo-500/30"
+              >{{ project.badge }}</span
+            >
+          </div>
+
+          <div class="p-6 space-y-4">
+            <div class="flex items-center justify-between">
+              <h3 class="text-xl font-bold text-slate-100">{{ project.title }}</h3>
+              <span
+                class="px-2 py-0.5 rounded text-[10px] font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
+                >{{ project.status }}</span
+              >
+            </div>
+
+            <div class="space-y-3.5 text-xs text-slate-300 font-mono">
+              <div>
+                <span class="text-emerald-400 font-semibold">[S] Situación:</span>
+                <p class="text-slate-400 mt-0.5 leading-relaxed">{{ project.star.situation }}</p>
+              </div>
+              <div>
+                <span class="text-indigo-400 font-semibold">[T] Tarea:</span>
+                <p class="text-slate-400 mt-0.5 leading-relaxed">{{ project.star.task }}</p>
+              </div>
+              <div>
+                <span class="text-violet-400 font-semibold">[A] Acción:</span>
+                <p class="text-slate-400 mt-0.5 leading-relaxed">{{ project.star.action }}</p>
+              </div>
+              <div>
+                <span class="text-amber-400 font-semibold">[R] Resultado:</span>
+                <p class="text-slate-400 mt-0.5 leading-relaxed">{{ project.star.result }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="p-6 pt-0 border-t border-white/5 bg-slate-900/30 flex items-center justify-between">
+          <div class="flex gap-1.5">
+            @for (tag of project.tags; track tag) {
+              <span
+                class="text-[10px] px-2 py-0.5 rounded bg-dark-800 border border-white/5 text-slate-400"
+                >{{ tag }}</span
+              >
+            }
+          </div>
+          <a
+            [href]="project.url"
+            target="_blank"
+            rel="noopener noreferrer"
+            [class]="'text-xs font-semibold flex items-center gap-1 transition-colors ' + project.linkColor"
+          >
+            {{ project.linkLabel }}
+            <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i>
+          </a>
+        </div>
+      </div>
+    }
+  </div>
+</section>

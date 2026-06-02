@@ -1,0 +1,270 @@
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start mt-2 animate-fade-in">
+  <section class="lg:col-span-7 demo-glass p-6 rounded-2xl flex flex-col gap-6">
+    <div>
+      <h2 class="text-2xl font-bold text-text-bright tracking-tight">Gestionar Equipo</h2>
+      <p class="text-sm text-text-muted mt-1">
+        Sincroniza proyectos de iceScrum o añade participantes para el control.
+      </p>
+    </div>
+
+    <div class="flex flex-col gap-5">
+      <div class="p-4 rounded-xl bg-white/[0.02] border border-white/5 flex flex-col gap-3">
+        <div class="flex items-center justify-between">
+          <label class="text-sm font-semibold text-text-bright uppercase tracking-wider">
+            CONECTOR ICESCRUM (API REST GO PROXY)
+          </label>
+          <span class="text-[11px] text-accent-info font-mono font-semibold">CORS BYPASS · DEMO</span>
+        </div>
+
+        <div class="flex gap-2">
+          <input
+            type="password"
+            [(ngModel)]="iceToken"
+            placeholder="x-icescrum-token (demo: no se envía al servidor)"
+            class="flex-1 bg-bg-deep border border-white/10 rounded-lg px-3 py-2 text-sm text-text-bright placeholder:text-text-muted/50 focus:outline-none focus:border-accent-info"
+          />
+          <button
+            type="button"
+            (click)="onSync()"
+            [disabled]="session.iceLoading()"
+            class="bg-accent-info hover:bg-accent-info/80 text-bg-deep rounded-lg px-4 py-2 text-sm font-bold flex items-center gap-1.5 disabled:opacity-50 cursor-pointer"
+          >
+            <i class="fa-solid fa-arrows-rotate" [class.animate-spin]="session.iceLoading()"></i>
+            Sincronizar
+          </button>
+        </div>
+
+        @if (session.iceLoading()) {
+          <div class="flex items-center gap-2 text-accent-info text-xs">
+            <span class="w-1.5 h-1.5 bg-accent-info rounded-full animate-ping"></span>
+            Conectando con datos simulados...
+          </div>
+        }
+        @if (session.iceSynced() && session.availableProjects().length) {
+          <div class="text-text-muted flex justify-between text-[11px] font-mono">
+            <span>Conectado (modo demo)</span>
+            <span>Proyectos: {{ session.availableProjects().length }}</span>
+          </div>
+        }
+      </div>
+
+      @if (session.availableProjects().length) {
+        <div class="flex flex-col gap-2">
+          <span class="text-xs font-semibold text-text-muted uppercase tracking-wider">
+            Proyectos Activos de la Daily
+          </span>
+          <div
+            class="grid grid-cols-1 sm:grid-cols-2 gap-2 bg-white/[0.01] border border-white/5 p-3 rounded-xl max-h-[160px] overflow-y-auto scrollbar-thin"
+          >
+            @for (proj of session.availableProjects(); track proj.pkey) {
+              <label
+                class="flex items-center gap-2.5 p-2 rounded-lg cursor-pointer hover:bg-white/5"
+                [class.bg-white/5]="isProjectChecked(proj.pkey)"
+              >
+                <input
+                  type="checkbox"
+                  [checked]="isProjectChecked(proj.pkey)"
+                  (change)="onProjectChange(proj.pkey, $event)"
+                  class="w-4 h-4 accent-accent-info"
+                />
+                <div class="flex flex-col min-w-0">
+                  <span class="text-xs font-bold text-text-bright uppercase truncate">{{
+                    proj.pkey
+                  }}</span>
+                  <span class="text-[11px] text-text-muted truncate">{{ proj.name }}</span>
+                </div>
+              </label>
+            }
+          </div>
+        </div>
+      }
+
+      <div class="flex flex-col gap-1.5 relative">
+        <label class="text-xs font-semibold text-text-muted uppercase tracking-wider">
+          Participante (Sincronizado de iceScrum)
+        </label>
+        <div class="relative">
+          <button
+            type="button"
+            (click)="session.togglePicker()"
+            [disabled]="session.selectedPkeys().length === 0"
+            class="w-full bg-white/[0.03] hover:bg-white/[0.05] border border-white/10 rounded-xl px-4 py-3 text-left flex items-center justify-between text-sm text-text-bright disabled:opacity-40 cursor-pointer"
+          >
+            <span>{{
+              session.selectedPkeys().length === 0
+                ? 'Selecciona proyectos primero'
+                : 'Seleccionar participante del Sprint...'
+            }}</span>
+            <i class="fa-solid fa-chevron-down text-text-muted transition-transform" [class.rotate-180]="session.pickerOpen()"></i>
+          </button>
+
+          @if (session.pickerOpen()) {
+            <div
+              class="absolute z-40 top-full left-0 right-0 mt-1.5 bg-bg-surface border border-white/15 rounded-xl shadow-2xl overflow-hidden max-h-[300px] flex flex-col"
+            >
+              <div class="p-2.5 bg-bg-deep border-b border-white/10 flex items-center gap-2">
+                <i class="fa-solid fa-magnifying-glass text-text-muted"></i>
+                <input
+                  type="search"
+                  [ngModel]="session.userSearchText()"
+                  (ngModelChange)="session.setUserSearch($event)"
+                  placeholder="Buscar miembro..."
+                  class="bg-transparent border-none text-sm text-text-bright w-full focus:outline-none"
+                />
+              </div>
+              <ul class="overflow-y-auto py-1">
+                @for (u of session.filteredPickUsers(); track u.id) {
+                  <li>
+                    <button
+                      type="button"
+                      (click)="session.addParticipantFromIce(u)"
+                      class="w-full px-4 py-2.5 text-left text-sm hover:bg-white/10 flex justify-between cursor-pointer"
+                    >
+                      <div>
+                        <span class="font-semibold block">{{ u.nombre }}</span>
+                        <span class="text-xs text-text-muted">{{
+                          u.projects.map((p) => p.pkey).join(', ')
+                        }}</span>
+                      </div>
+                      <span
+                        class="text-xs py-0.5 px-2 rounded-full bg-accent-info/10 text-accent-info font-mono"
+                      >
+                        {{ session.getTasksByUserCount(u.id) }} tareas
+                      </span>
+                    </button>
+                  </li>
+                }
+                @if (session.filteredPickUsers().length === 0) {
+                  <li class="px-4 py-5 text-center text-xs text-text-muted">
+                    No hay usuarios disponibles
+                  </li>
+                }
+              </ul>
+            </div>
+          }
+        </div>
+      </div>
+
+      <form (submit)="onManualSubmit($event)" class="flex flex-col gap-2">
+        <label class="text-xs font-semibold text-text-muted uppercase tracking-wider">
+          ¿Agregar Participante Manualmente?
+        </label>
+        <div class="flex gap-2">
+          <input
+            type="text"
+            [ngModel]="session.manualName()"
+            (ngModelChange)="session.manualName.set($event)"
+            name="manualName"
+            placeholder="Ej: Invitado especial"
+            class="flex-1 bg-bg-deep border border-white/10 rounded-lg px-3 py-2 text-sm text-text-bright focus:outline-none focus:border-accent-info"
+          />
+          <button
+            type="submit"
+            class="bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg px-4 py-2 text-sm font-medium flex items-center gap-1 cursor-pointer"
+          >
+            <i class="fa-solid fa-plus text-accent-info"></i>
+            Añadir
+          </button>
+        </div>
+      </form>
+
+      <div class="flex flex-col gap-1.5">
+        <label class="text-xs font-semibold text-text-muted uppercase tracking-wider">
+          Horario Pactado de la Reunión
+        </label>
+        <input
+          type="time"
+          [ngModel]="session.plannedStartTime()"
+          (ngModelChange)="session.setPlannedStartTime($event)"
+          class="bg-bg-deep border border-white/10 rounded-lg px-4 py-2 text-sm text-text-bright focus:outline-none focus:border-accent-info w-full max-w-[150px] font-mono"
+        />
+      </div>
+    </div>
+
+    @if (startError()) {
+      <p class="text-accent-danger text-sm">{{ startError() }}</p>
+    }
+
+    <div class="border-t border-white/5 pt-6">
+      <button
+        type="button"
+        (click)="startDaily()"
+        class="w-full bg-accent-primary hover:bg-accent-primary/80 text-bg-deep rounded-xl py-4 font-bold flex items-center justify-center gap-2 cursor-pointer shadow-lg shadow-accent-primary/20 text-lg"
+      >
+        <i class="fa-solid fa-play"></i>
+        INICIAR DAILY SCRUM MASTER
+      </button>
+    </div>
+  </section>
+
+  <section class="lg:col-span-5 demo-glass p-6 rounded-2xl flex flex-col gap-4">
+    <div class="flex justify-between items-center">
+      <div>
+        <h2 class="text-lg font-bold text-text-bright">
+          Miembros en Rotación ({{ session.participants().length }})
+        </h2>
+        <p class="text-xs text-text-muted">Se seleccionarán al azar para que expongan.</p>
+      </div>
+      @if (session.participants().length) {
+        <button
+          type="button"
+          (click)="session.clearParticipants()"
+          class="text-xs py-1 px-2.5 rounded bg-white/5 text-accent-danger border border-accent-danger/20 cursor-pointer"
+        >
+          Limpiar todo
+        </button>
+      }
+    </div>
+
+    <div class="flex-1 overflow-y-auto space-y-2 max-h-[500px] scrollbar-thin">
+      @for (p of session.participants(); track p.id) {
+        <div
+          class="flex flex-col sm:flex-row justify-between sm:items-center p-3 rounded-xl gap-2 bg-white/[0.02] border border-white/5"
+          [class.opacity-50]="p.excludeFromRotation"
+        >
+          <div>
+            <div class="flex items-center gap-1.5 flex-wrap">
+              <span class="font-semibold text-text-bright" [class.line-through]="p.excludeFromRotation">{{
+                p.name
+              }}</span>
+              @if (p.iceScrumUserId) {
+                <span
+                  class="text-[10px] font-mono py-0.5 px-2 bg-accent-info/5 border border-accent-info/10 text-accent-info rounded-full"
+                >
+                  {{ session.getTasksByUserCount(p.iceScrumUserId) }} tareas
+                </span>
+              }
+            </div>
+            <div class="flex gap-1 mt-1">
+              @if (p.isLate) {
+                <span class="text-[9px] font-bold text-accent-danger border border-accent-danger/20 bg-accent-danger/10 px-1.5 rounded">Tarde</span>
+              }
+              @if (p.isDelayed) {
+                <span class="text-[9px] font-bold text-accent-warning border border-accent-warning/20 bg-accent-warning/10 px-1.5 rounded">Demorado</span>
+              }
+            </div>
+          </div>
+          <div class="flex items-center gap-1">
+            <button type="button" (click)="session.toggleParticipantFlag(p.id, 'excludeFromRotation')" class="p-2 rounded-lg border border-white/5 text-text-muted hover:text-text-bright cursor-pointer">
+              <i class="fa-solid" [class.fa-user-check]="p.excludeFromRotation" [class.fa-user-xmark]="!p.excludeFromRotation"></i>
+            </button>
+            <button type="button" (click)="session.toggleParticipantFlag(p.id, 'isLate')" class="p-2 rounded-lg border border-white/5 cursor-pointer" [class.text-accent-danger]="p.isLate">
+              <i class="fa-solid fa-clock"></i>
+            </button>
+            <button type="button" (click)="session.toggleParticipantFlag(p.id, 'isDelayed')" class="p-2 rounded-lg border border-white/5 cursor-pointer" [class.text-accent-warning]="p.isDelayed">
+              <i class="fa-solid fa-triangle-exclamation"></i>
+            </button>
+            <button type="button" (click)="session.removeParticipant(p.id)" class="p-2 rounded-lg border border-white/5 text-text-muted hover:text-accent-danger cursor-pointer">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </div>
+        </div>
+      }
+      @if (session.participants().length === 0) {
+        <div class="py-12 text-center rounded-xl border border-dashed border-white/5">
+          <p class="text-sm text-text-muted">No hay participantes cargados en la rotación.</p>
+        </div>
+      }
+    </div>
+  </section>
+</div>

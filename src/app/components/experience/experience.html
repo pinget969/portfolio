@@ -1,0 +1,97 @@
+<section class="py-20 bg-dark-900/20 border-t border-white/5" id="experience">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center max-w-2xl mx-auto mb-16">
+      <span
+        class="text-xs font-bold uppercase tracking-widest text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20"
+        >Trayectoria</span
+      >
+      <h2 class="text-3xl sm:text-4xl font-extrabold mt-3">Experiencia Profesional</h2>
+      <p class="text-slate-400 mt-3 text-base">
+        Mi recorrido liderando equipos técnicos frontend y construyendo interfaces empresariales de
+        alta resiliencia.
+      </p>
+    </div>
+
+    <div class="max-w-4xl mx-auto relative border-l-2 border-slate-800 pl-6 sm:pl-10 space-y-12">
+      @for (exp of experiences; track exp.id) {
+        <div class="relative group">
+          <span
+            class="absolute -left-[35px] sm:-left-[51px] top-1 w-6 h-6 rounded-full border-4 border-dark-950 flex items-center justify-center text-[10px] text-white"
+            [class.bg-indigo-500]="exp.badgeStyle === 'active'"
+            [class.bg-slate-800]="exp.badgeStyle === 'past'"
+            [class.text-slate-500]="exp.badgeStyle === 'past'"
+          ></span>
+
+          <div
+            class="glass-panel p-6 sm:p-8 rounded-2xl border border-white/10 relative transition-all duration-300"
+            [class.hover:border-indigo-500/30]="exp.badgeStyle === 'active'"
+            [class.hover:border-emerald-500/20]="exp.badgeStyle === 'past'"
+          >
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
+              <div>
+                @if (exp.badgeStyle === 'active') {
+                  <span
+                    class="text-xs font-bold uppercase tracking-wider text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded border border-emerald-500/20"
+                    >{{ exp.badge }}</span
+                  >
+                } @else {
+                  <span
+                    class="text-xs font-bold uppercase tracking-wider text-slate-400 bg-slate-800 px-2.5 py-1 rounded border border-white/5"
+                    >{{ exp.badge }}</span
+                  >
+                }
+                <h3 class="text-xl font-bold text-slate-100 mt-2">{{ exp.title }}</h3>
+                <p class="text-sm font-semibold text-slate-400">{{ exp.company }}</p>
+              </div>
+              <div class="text-right sm:text-right text-left">
+                @if (exp.badgeStyle === 'active') {
+                  <span
+                    class="inline-block text-xs font-mono text-indigo-400 bg-indigo-500/5 px-2.5 py-1 rounded border border-indigo-500/10"
+                    >{{ exp.period }}</span
+                  >
+                } @else {
+                  <span
+                    class="inline-block text-xs font-mono text-slate-400 bg-slate-800 px-2.5 py-1 rounded border border-white/5"
+                    >{{ exp.period }}</span
+                  >
+                }
+                <p class="text-xs text-slate-500 mt-1">{{ exp.location }}</p>
+              </div>
+            </div>
+
+            @if (exp.highlights.length) {
+              <ul class="space-y-3.5 text-sm text-slate-300">
+                @for (highlight of exp.highlights; track highlight) {
+                  <li class="flex items-start gap-2.5">
+                    <i class="fa-solid fa-circle-check text-emerald-400 mt-1 text-xs"></i>
+                    <span [innerHTML]="highlight"></span>
+                  </li>
+                }
+              </ul>
+            }
+
+            @if (exp.projects?.length) {
+              <div class="space-y-4 text-sm text-slate-300">
+                @for (project of exp.projects; track project.label) {
+                  <div>
+                    <span class="font-semibold text-slate-200">{{ project.label }}</span>
+                    <p class="text-slate-400 mt-1">{{ project.description }}</p>
+                  </div>
+                }
+              </div>
+            }
+
+            <div class="mt-6 pt-4 border-t border-white/5 flex flex-wrap gap-2">
+              @for (tag of exp.tags; track tag) {
+                <span
+                  class="px-2.5 py-1 text-xs rounded-lg bg-dark-800 text-slate-400 border border-white/5"
+                  >{{ tag }}</span
+                >
+              }
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</section>

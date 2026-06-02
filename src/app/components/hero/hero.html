@@ -1,0 +1,149 @@
+<section class="relative pt-32 pb-24 md:pt-40 md:pb-32 overflow-hidden" id="about">
+  <div
+    class="absolute top-1/4 left-1/4 w-[300px] h-[300px] bg-indigo-600/10 rounded-full blur-[120px] pointer-events-none"
+  ></div>
+  <div
+    class="absolute bottom-1/3 right-1/4 w-[400px] h-[400px] bg-emerald-500/10 rounded-full blur-[150px] pointer-events-none"
+  ></div>
+
+  <div
+    class="absolute inset-0 bg-[radial-gradient(#1f2937_1px,transparent_1px)] [background-size:24px_24px] opacity-20 pointer-events-none"
+  ></div>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+      <div class="lg:col-span-7 space-y-6 text-center lg:text-left">
+        <div
+          class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-900 border border-slate-800"
+        >
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span class="text-xs font-semibold text-slate-300 tracking-wider uppercase"
+            >SDD Specialist (Spec Driven Development)</span
+          >
+        </div>
+
+        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight">
+          Creo productos con
+          <span
+            class="bg-gradient-to-r from-emerald-400 via-emerald-300 to-indigo-400 bg-clip-text text-transparent"
+            >Angular</span
+          >, escalo con
+          <span class="bg-gradient-to-r from-indigo-400 to-violet-400 bg-clip-text text-transparent"
+            >Go</span
+          >
+          y potencio con <span class="text-indigo-400">IA</span>.
+        </h1>
+
+        <p class="text-lg text-slate-300 max-w-2xl mx-auto lg:mx-0 leading-relaxed font-normal">
+          Desarrollador Frontend Senior y Especialista en Angular. Traduzco requerimientos complejos
+          en soluciones SaaS robustas, interactivas y 100% en producción. Pionero en la metodología
+          de desarrollo <strong>SDD (Spec Driven Development)</strong> para la creación de software
+          determinista de alta velocidad.
+        </p>
+
+        <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-4">
+          <a
+            href="#projects"
+            class="w-full sm:w-auto px-6 py-3.5 rounded-xl bg-gradient-to-r from-emerald-600 via-emerald-500 to-indigo-600 text-white font-semibold text-base shadow-lg shadow-emerald-500/20 hover:shadow-emerald-500/30 hover:scale-[1.02] transition-all flex items-center justify-center gap-2.5"
+          >
+            <i class="fa-solid fa-rocket"></i>
+            Ver Proyectos Reales
+          </a>
+          <a
+            href="#playground"
+            class="w-full sm:w-auto px-6 py-3.5 rounded-xl glass-panel text-slate-300 font-medium hover:text-white hover:bg-slate-900 border border-white/10 hover:border-white/20 transition-all flex items-center justify-center gap-2"
+          >
+            Probar Demo Daily
+            <i class="fa-solid fa-arrow-right text-xs"></i>
+          </a>
+        </div>
+
+        <div class="pt-6">
+          <p class="text-xs uppercase font-semibold text-slate-500 tracking-wider mb-3">
+            Tecnologías de Producción
+          </p>
+          <div class="flex flex-wrap justify-center lg:justify-start gap-2.5">
+            @for (badge of techBadges; track badge.label) {
+              <span
+                class="px-3 py-1.5 rounded-lg bg-dark-800 border border-white/5 text-sm text-slate-300 flex items-center gap-1.5"
+              >
+                <i [class]="badge.icon"></i> {{ badge.label }}
+              </span>
+            }
+          </div>
+        </div>
+      </div>
+
+      <div class="lg:col-span-5 relative mt-6 lg:mt-0">
+        <div
+          class="absolute inset-0 bg-gradient-to-r from-emerald-500/10 to-indigo-500/10 rounded-3xl blur-2xl -z-10 animate-pulse-slow"
+        ></div>
+
+        <div class="glass-panel rounded-2xl p-6 border border-white/10 relative overflow-hidden shadow-2xl">
+          <div class="flex items-center justify-between pb-4 mb-4 border-b border-white/5">
+            <div class="flex gap-1.5">
+              <span class="w-3 h-3 rounded-full bg-red-500/60"></span>
+              <span class="w-3 h-3 rounded-full bg-yellow-500/60"></span>
+              <span class="w-3 h-3 rounded-full bg-green-500/60"></span>
+            </div>
+            <span class="text-xs text-slate-500 font-mono flex items-center gap-1">
+              <i class="fa-solid fa-lock text-[10px]"></i> pinget.com.ar/info
+            </span>
+          </div>
+
+          <div class="space-y-5">
+            <div class="flex items-center gap-4">
+              <div class="relative">
+                <div
+                  class="w-16 h-16 rounded-full bg-gradient-to-tr from-emerald-500 to-indigo-600 flex items-center justify-center text-white text-xl font-bold font-mono border-2 border-dark-950 shadow-lg"
+                >
+                  NP
+                </div>
+                <span
+                  class="absolute bottom-0 right-0 w-4 h-4 bg-emerald-500 border-2 border-dark-950 rounded-full"
+                ></span>
+              </div>
+              <div>
+                <h3 class="text-lg font-bold text-slate-100">Nelson Javier Pinget</h3>
+                <p class="text-sm text-slate-400">Santa Fe, Argentina 🇦🇷</p>
+              </div>
+            </div>
+
+            <div
+              class="bg-dark-900/60 rounded-xl p-4 border border-white/5 text-sm text-slate-300 leading-relaxed font-mono"
+            >
+              <span class="text-emerald-400">const</span> engineer = &#123;<br />
+              &nbsp;&nbsp;methodology: <span class="text-amber-300">"SDD (Spec Driven Dev)"</span>,<br />
+              &nbsp;&nbsp;aiEngine: <span class="text-amber-300">"Google AI Studio (Gemini)"</span>,<br />
+              &nbsp;&nbsp;philosophy:
+              <span class="text-indigo-300">"De la especificación rigurosa al producto real."</span
+              ><br />
+              &#125;;
+            </div>
+
+            <div class="grid grid-cols-3 gap-3 text-center">
+              <div class="bg-dark-900/40 p-3 rounded-xl border border-white/5">
+                <div class="text-xl font-extrabold text-emerald-400">3+</div>
+                <div class="text-[10px] uppercase tracking-wider text-slate-500 font-medium">
+                  SaaS Apps en Vivo
+                </div>
+              </div>
+              <div class="bg-dark-900/40 p-3 rounded-xl border border-white/5">
+                <div class="text-xl font-extrabold text-indigo-400">100%</div>
+                <div class="text-[10px] uppercase tracking-wider text-slate-500 font-medium">
+                  Autónomo
+                </div>
+              </div>
+              <div class="bg-dark-900/40 p-3 rounded-xl border border-white/5">
+                <div class="text-xl font-extrabold text-violet-400">Go/Ang</div>
+                <div class="text-[10px] uppercase tracking-wider text-slate-500 font-medium">
+                  Full Stack Core
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

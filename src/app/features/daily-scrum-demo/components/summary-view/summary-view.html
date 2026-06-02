@@ -1,0 +1,165 @@
+<div class="demo-glass p-6 sm:p-8 rounded-2xl flex flex-col gap-8 animate-fade-in">
+  <div class="text-center">
+    <h1 class="text-2xl sm:text-3xl font-extrabold text-text-bright tracking-tight">
+      RESUMEN DE LA REUNIÓN
+    </h1>
+    <p class="text-sm text-text-muted mt-1.5">Métricas de desempeño y control general del tiempo del equipo</p>
+  </div>
+
+  <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4">
+    <div class="demo-glass p-4 rounded-xl text-center flex flex-col gap-1">
+      <span class="text-xs text-text-muted">Tiempo Total</span>
+      <span class="text-lg sm:text-2xl font-bold font-mono text-accent-info">{{
+        formatTime(session.globalTimer())
+      }}</span>
+    </div>
+    <div class="demo-glass p-4 rounded-xl text-center flex flex-col gap-1">
+      <span class="text-xs text-text-muted">Promedio p/p</span>
+      <span class="text-lg sm:text-2xl font-bold font-mono text-text-bright">{{
+        formatTime(averageTime())
+      }}</span>
+    </div>
+    <div class="demo-glass p-4 rounded-xl text-center flex flex-col gap-1">
+      <span class="text-xs text-text-muted">Más Rápido</span>
+      <span class="text-sm font-bold text-accent-primary truncate">{{ fastestName() }}</span>
+    </div>
+    <div class="demo-glass p-4 rounded-xl text-center flex flex-col gap-1">
+      <span class="text-xs text-text-muted">Más Lento</span>
+      <span class="text-sm font-bold text-accent-danger truncate">{{ slowestName() }}</span>
+    </div>
+    <div class="demo-glass p-4 rounded-xl text-center flex flex-col gap-1">
+      <span class="text-xs text-text-muted">Cantidad Pausas</span>
+      <span class="text-lg sm:text-2xl font-bold font-mono">{{ session.pauseCount() }}</span>
+    </div>
+    <div class="demo-glass p-4 rounded-xl text-center flex flex-col gap-1">
+      <span class="text-xs text-text-muted">Tiempo en Pausa</span>
+      <span class="text-lg sm:text-2xl font-bold font-mono">{{
+        formatTime(session.totalPauseSeconds())
+      }}</span>
+    </div>
+    <div class="demo-glass p-4 rounded-xl text-center flex flex-col gap-1 col-span-2 sm:col-span-1">
+      <span class="text-[10px] text-text-muted font-bold uppercase">{{ delayLabel() }}</span>
+      <span class="text-lg font-bold font-mono mt-1" [class]="delayClass()">{{
+        formatTime(Math.abs(session.startDelaySeconds()))
+      }}</span>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+    <div class="lg:col-span-8 overflow-x-auto">
+      <span class="text-[11px] text-text-muted font-bold uppercase tracking-wider block mb-3 font-mono">
+        Desglose de Tiempos por Expositor
+      </span>
+      <table class="w-full text-left border-collapse text-sm">
+        <thead>
+          <tr class="border-b border-white/10">
+            <th class="py-3 px-4 font-semibold text-text-muted">Nombre del Participante</th>
+            <th class="py-3 px-4 font-semibold text-text-muted">Indicadores</th>
+            <th class="py-3 px-4 font-semibold text-text-muted text-center">Duración</th>
+            <th class="py-3 px-4 font-semibold text-text-muted text-center">Tiempo en Pausa</th>
+            <th class="py-3 px-4 font-semibold text-text-muted text-right">Rendimiento</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-white/5">
+          @for (res of session.results(); track res.name + $index) {
+            <tr class="hover:bg-white/[0.01]">
+              <td class="py-3 px-4 font-bold text-text-bright">{{ res.name }}</td>
+              <td class="py-3 px-4">
+                <div class="flex gap-1">
+                  @if (res.isLate) {
+                    <span class="bg-accent-danger/10 text-accent-danger text-[9px] font-bold py-0.5 px-2 rounded">Tarde</span>
+                  }
+                  @if (res.isDelayed) {
+                    <span class="bg-accent-warning/10 text-accent-warning text-[9px] font-bold py-0.5 px-2 rounded">Demorado</span>
+                  }
+                  @if (!res.isLate && !res.isDelayed) {
+                    <span class="text-text-muted text-xs">-</span>
+                  }
+                </div>
+              </td>
+              <td class="py-3 px-4 font-mono text-center">
+                @if (res.skipped) {
+                  <span class="text-text-muted italic text-xs">Omitido</span>
+                } @else {
+                  {{ formatTime(res.time) }}
+                }
+              </td>
+              <td class="py-3 px-4 font-mono text-center text-text-muted">
+                {{ res.pauseTime > 0 ? formatTime(res.pauseTime) : '-' }}
+              </td>
+              <td class="py-3 px-4 text-right">
+                <span class="text-xl">{{ getResultClassification(res).emoji }}</span>
+                <span class="text-xs text-text-muted ml-1">{{ getResultClassification(res).text }}</span>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <div class="lg:col-span-4 demo-glass p-5 rounded-xl flex flex-col gap-5 border border-white/5">
+      <h4 class="text-xs font-bold uppercase font-mono flex items-center gap-1.5">
+        <i class="fa-solid fa-chart-bar text-accent-primary"></i>
+        Resumen del Sprint
+      </h4>
+      <div class="flex flex-col items-center gap-3">
+        <span class="text-xs font-bold text-text-muted uppercase">Progreso General</span>
+        <div class="relative flex items-center justify-center w-28 h-28">
+          <svg class="w-full h-full transform -rotate-90">
+            <circle cx="56" cy="56" r="48" class="stroke-white/[0.04] stroke-[8px] fill-transparent" />
+            <circle
+              cx="56"
+              cy="56"
+              r="48"
+              class="stroke-accent-primary stroke-[8px] fill-transparent"
+              [attr.stroke-dasharray]="2 * Math.PI * 48"
+              [attr.stroke-dashoffset]="computeStrokeDashoffset(sprintProgress().percent, 100, 48)"
+            />
+          </svg>
+          <span class="absolute text-2xl font-black font-mono text-text-bright">{{ sprintProgress().percent }}%</span>
+        </div>
+        <span class="text-base font-extrabold font-mono text-text-bright">
+          {{ sprintProgress().donePts }} / {{ sprintProgress().totalPts }} Esfuerzo
+        </span>
+      </div>
+      <div class="space-y-4 pt-2 border-t border-white/5 text-xs">
+        <div class="flex justify-between">
+          <span class="text-text-muted flex items-center gap-1.5">
+            <i class="fa-solid fa-calendar text-accent-info"></i>
+            Días restantes
+          </span>
+          <span class="font-bold font-mono">5</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-text-muted flex items-center gap-1.5">
+            <i class="fa-solid fa-code text-purple-400"></i>
+            Historias completas
+          </span>
+          <span class="font-bold font-mono"
+            >{{ sprintProgress().completedStories }} / {{ sprintProgress().totalStories }}</span
+          >
+        </div>
+        <div class="flex justify-between">
+          <span class="text-text-muted flex items-center gap-1.5">
+            <i class="fa-solid fa-briefcase text-accent-primary"></i>
+            Tareas completadas
+          </span>
+          <span class="font-bold font-mono"
+            >{{ sprintProgress().completedTasks }} / {{ sprintProgress().totalTasks }}</span
+          >
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="border-t border-white/5 pt-6 text-center">
+    <button
+      type="button"
+      (click)="session.resetToSetup()"
+      class="bg-accent-info hover:bg-accent-info/80 text-bg-deep py-3.5 px-8 rounded-xl font-bold inline-flex items-center gap-2 cursor-pointer shadow-lg shadow-accent-info/10"
+    >
+      <i class="fa-solid fa-rotate"></i>
+      INICIAR NUEVA DAILY SCRUM MASTER
+    </button>
+  </div>
+</div>

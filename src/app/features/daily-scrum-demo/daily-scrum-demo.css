@@ -1,0 +1,20 @@
+.daily-demo {
+  font-family: 'Outfit', 'Inter', sans-serif;
+}
+
+.daily-demo .demo-glass {
+  background: rgba(22, 27, 34, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
+
+.daily-demo .scrollbar-thin::-webkit-scrollbar {
+  width: 6px;
+}
+
+.daily-demo .scrollbar-thin::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+}

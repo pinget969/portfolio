@@ -1,0 +1,314 @@
+@if (speaker(); as current) {
+  <div class="w-full flex flex-col gap-6 animate-fade-in pb-8">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+      <div
+        class="lg:col-span-4 demo-glass p-5 rounded-2xl flex flex-col justify-between items-center text-center gap-4 min-h-[280px]"
+      >
+        <div class="flex flex-col items-center w-full">
+          <span class="text-xs text-text-muted font-bold uppercase tracking-wider mb-3"
+            >Persona Actual</span
+          >
+          <div class="relative flex items-center justify-center w-36 h-36">
+            <svg class="w-full h-full transform -rotate-90">
+              <circle cx="72" cy="72" r="64" class="stroke-white/[0.04] stroke-[8px] fill-transparent" />
+              <circle
+                cx="72"
+                cy="72"
+                r="64"
+                class="stroke-[8px] fill-transparent transition-all duration-300"
+                [attr.stroke-dasharray]="2 * Math.PI * 64"
+                [attr.stroke-dashoffset]="computeStrokeDashoffset(session.speakerTimer(), current.isParkingLot ? 900 : 120, 64)"
+                [attr.stroke]="getSpeakerTimerColor(session.speakerTimer())"
+              />
+            </svg>
+            <div class="absolute flex flex-col items-center">
+              <span class="text-3xl font-extrabold font-mono text-text-bright">{{
+                formatTime(session.speakerTimer())
+              }}</span>
+              <span class="text-[9px] text-text-muted uppercase">Transcurrido</span>
+            </div>
+          </div>
+          <span class="text-xs text-text-muted mt-2 font-mono"
+            >de {{ current.isParkingLot ? '15' : '2' }} min</span
+          >
+        </div>
+        <div class="flex gap-2 w-full">
+          <button
+            type="button"
+            (click)="session.togglePause()"
+            class="flex-1 py-2.5 px-3 rounded-xl font-bold text-xs flex items-center justify-center gap-1.5 cursor-pointer border"
+            [class.bg-accent-primary/10]="session.isPaused()"
+            [class.border-accent-primary/20]="session.isPaused()"
+            [class.text-accent-primary]="session.isPaused()"
+            [class.bg-white/5]="!session.isPaused()"
+            [class.border-white/5]="!session.isPaused()"
+          >
+            <i class="fa-solid" [class.fa-play]="session.isPaused()" [class.fa-pause]="!session.isPaused()"></i>
+            {{ session.isPaused() ? 'Reanudar' : 'Pausar' }}
+          </button>
+          <button
+            type="button"
+            (click)="session.finishDaily()"
+            class="flex-1 py-2.5 px-3 rounded-xl border border-accent-danger/25 text-accent-danger text-xs font-bold flex items-center justify-center gap-1.5 cursor-pointer"
+          >
+            <i class="fa-solid fa-square text-xs"></i>
+            Finalizar
+          </button>
+        </div>
+      </div>
+
+      <div class="lg:col-span-8 demo-glass p-6 rounded-2xl flex flex-col justify-between min-h-[280px]">
+        <div class="flex flex-wrap items-center justify-between gap-3 border-b border-white/5 pb-4">
+          <div class="flex items-center gap-2">
+            <span class="text-lg font-bold text-text-bright">Daily Scrum</span>
+            <span
+              class="bg-accent-info/10 border border-accent-info/20 text-accent-info text-xs px-2.5 py-0.5 rounded-full font-mono uppercase"
+              >{{ session.getActiveSprintName() }}</span
+            >
+          </div>
+          <div class="flex items-center gap-1.5 text-xs text-text-muted">
+            <i class="fa-solid fa-calendar text-accent-info"></i>
+            {{ session.getFormattedDate() }}
+          </div>
+          <span class="text-xs font-mono font-bold bg-white/5 py-1 px-3 rounded-full text-text-muted border border-white/5">
+            Persona {{ session.currentIndex() + 1 }} de {{ session.queue().length }}
+          </span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-center py-4 flex-1">
+          <div class="md:col-span-3 flex flex-col items-center opacity-40 text-center">
+            <span class="text-[10px] uppercase font-mono font-bold text-accent-warning mb-1">Anterior</span>
+            @if (session.prevSpeaker(); as prev) {
+              <div class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-xs font-bold border border-white/5 mb-1">
+                {{ getInitials(prev.name) }}
+              </div>
+              <span class="text-[11px] font-bold truncate max-w-[100px]">{{ prev.name }}</span>
+            } @else {
+              <span class="text-xs text-text-muted italic py-4">Nadie</span>
+            }
+          </div>
+
+          <div class="hidden md:flex md:col-span-1 justify-center text-text-muted/20 text-lg">≫</div>
+
+          <div
+            class="md:col-span-4 flex flex-col items-center p-3 bg-accent-info/[0.03] border border-accent-info/10 rounded-2xl min-h-[140px]"
+          >
+            @if (!current.isParkingLot) {
+              <span class="text-[10px] uppercase font-mono font-bold text-accent-info mb-1.5">Hablando</span>
+            }
+            <h4 class="text-lg font-extrabold text-text-bright truncate max-w-full px-1">{{ current.name }}</h4>
+            @if (!current.isParkingLot) {
+              <div class="flex gap-1 mt-2 flex-wrap justify-center">
+                <button
+                  type="button"
+                  (click)="session.toggleCurrentSpeakerFlag('isLate')"
+                  class="py-0.5 px-2 rounded-full border text-[8px] font-bold cursor-pointer"
+                  [class.bg-accent-danger/20]="current.isLate"
+                  [class.border-accent-danger/40]="current.isLate"
+                  [class.text-accent-danger]="current.isLate"
+                  [class.bg-white/5]="!current.isLate"
+                  [class.border-white/5]="!current.isLate"
+                >
+                  Llegó Tarde
+                </button>
+                <button
+                  type="button"
+                  (click)="session.toggleCurrentSpeakerFlag('isDelayed')"
+                  class="py-0.5 px-2 rounded-full border text-[8px] font-bold cursor-pointer"
+                  [class.bg-accent-warning/20]="current.isDelayed"
+                  [class.border-accent-warning/40]="current.isDelayed"
+                  [class.text-accent-warning]="current.isDelayed"
+                  [class.bg-white/5]="!current.isDelayed"
+                  [class.border-white/5]="!current.isDelayed"
+                >
+                  Demorado
+                </button>
+              </div>
+            }
+          </div>
+
+          <div class="hidden md:flex md:col-span-1 justify-center text-text-muted/20 text-lg">≫</div>
+
+          <div class="md:col-span-3 flex flex-col items-center opacity-60 text-center">
+            <span class="text-[10px] uppercase font-mono font-bold text-purple-400 mb-1">Siguiente</span>
+            @if (session.nextSpeakerParticipant(); as next) {
+              <div class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-xs font-bold border border-white/10 mb-1">
+                {{ getInitials(next.name) }}
+              </div>
+              <span class="text-[11px] font-bold truncate max-w-[100px]">{{ next.name }}</span>
+            } @else {
+              <span class="text-xs text-text-muted italic py-4">Nadie</span>
+            }
+          </div>
+        </div>
+
+        <div class="flex gap-3 justify-center items-center pt-2 border-t border-white/5">
+          @if (!current.isParkingLot) {
+            <button
+              type="button"
+              (click)="session.skipSpeaker()"
+              class="py-2 px-3 rounded-xl border border-accent-danger/20 text-accent-danger text-xs font-bold flex items-center gap-1 cursor-pointer"
+            >
+              <i class="fa-solid fa-user-minus"></i>
+              Saltar (Ausente)
+            </button>
+          }
+          <button
+            type="button"
+            (click)="session.goToNextSpeaker()"
+            class="py-2.5 px-5 rounded-xl bg-accent-info hover:bg-accent-info/85 text-bg-deep text-xs font-extrabold flex-1 flex items-center justify-center gap-1.5 cursor-pointer"
+          >
+            {{ nextButtonLabel() }}
+            <i class="fa-solid fa-arrow-right"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    @if (!current.isParkingLot) {
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="demo-glass p-4 rounded-xl flex items-start gap-3 border border-white/5">
+          <div class="p-2 rounded-xl bg-accent-info/10 text-accent-info border border-accent-info/15">
+            <i class="fa-solid fa-circle-check text-xl"></i>
+          </div>
+          <div>
+            <span class="text-sm font-bold text-text-bright block">¿Qué hice ayer?</span>
+            <span class="text-xs text-text-muted">Tareas completadas y avances significativos</span>
+          </div>
+        </div>
+        <div class="demo-glass p-4 rounded-xl flex items-start gap-3 border border-white/5">
+          <div class="p-2 rounded-xl bg-accent-primary/10 text-accent-primary border border-accent-primary/15">
+            <i class="fa-solid fa-bullseye text-xl"></i>
+          </div>
+          <div>
+            <span class="text-sm font-bold text-text-bright block">¿Qué haré hoy?</span>
+            <span class="text-xs text-text-muted">Objetivos de cara al sprint diario</span>
+          </div>
+        </div>
+        <div class="demo-glass p-4 rounded-xl flex items-start gap-3 border border-white/5">
+          <div class="p-2 rounded-xl bg-accent-danger/10 text-accent-danger border border-accent-danger/15">
+            <i class="fa-solid fa-triangle-exclamation text-xl"></i>
+          </div>
+          <div>
+            <span class="text-sm font-bold text-text-bright block">¿Bloqueos?</span>
+            <span class="text-xs text-text-muted">Impedimentos que requieren ayuda técnica</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <div class="lg:col-span-7 demo-glass p-5 rounded-xl flex flex-col gap-4">
+          <div class="flex justify-between items-center border-b border-white/5 pb-2">
+            <h4 class="text-xs font-bold uppercase font-mono flex items-center gap-1.5">
+              <i class="fa-solid fa-briefcase text-accent-info"></i>
+              Tareas de {{ current.name }}
+              <span class="text-[11px] font-normal text-text-muted italic font-sans">(Simulación)</span>
+            </h4>
+            <span class="text-[10px] font-mono bg-white/5 py-0.5 px-2 rounded-full border border-white/10">
+              {{ tasksDone(current).length }}/{{ filteredTasks(current).length }} tasks
+            </span>
+          </div>
+          <div class="relative">
+            <i class="fa-solid fa-magnifying-glass text-text-muted absolute left-3 top-1/2 -translate-y-1/2"></i>
+            <input
+              type="search"
+              [ngModel]="session.taskSearchText()"
+              (ngModelChange)="session.taskSearchText.set($event)"
+              placeholder="Buscar tarea..."
+              class="w-full bg-white/[0.03] border border-white/5 rounded-xl pl-9 pr-3 py-1.5 text-xs text-text-bright focus:outline-none focus:border-accent-info"
+            />
+          </div>
+          <div class="space-y-4 max-h-[350px] overflow-y-auto scrollbar-thin">
+            @if (tasksInProgress(current).length) {
+              <div>
+                <span class="text-[10px] uppercase font-mono font-bold text-accent-warning block mb-2">
+                  En Progreso ({{ tasksInProgress(current).length }})
+                </span>
+                @for (task of tasksInProgress(current); track task.name) {
+                  <div class="flex justify-between gap-3 p-2.5 rounded-xl bg-white/[0.01] border border-white/5 mb-1.5">
+                    <span class="text-xs font-semibold">{{ task.name }}</span>
+                    <span class="text-[9px] font-bold bg-accent-warning/10 text-accent-warning py-0.5 px-2 rounded-full">En progreso</span>
+                  </div>
+                }
+              </div>
+            }
+            @if (tasksDone(current).length) {
+              <div>
+                <span class="text-[10px] uppercase font-mono font-bold text-accent-primary block mb-2">
+                  Completadas ({{ tasksDone(current).length }})
+                </span>
+                @for (task of tasksDone(current); track task.name) {
+                  <div class="flex justify-between gap-3 p-2.5 rounded-xl bg-white/[0.01] border border-white/5 mb-1.5 opacity-75">
+                    <span class="text-xs font-semibold">{{ task.name }}</span>
+                    <span class="text-[9px] font-bold bg-accent-primary/10 text-accent-primary py-0.5 px-2 rounded-full">Hecho</span>
+                  </div>
+                }
+              </div>
+            }
+            @if (!filteredTasks(current).length) {
+              <p class="text-xs text-text-muted italic text-center py-4">Sin tareas asignadas</p>
+            }
+          </div>
+        </div>
+
+        <div class="lg:col-span-5 demo-glass p-5 rounded-xl flex flex-col gap-4">
+          <div class="flex justify-between items-center border-b border-white/5 pb-2">
+            <h4 class="text-xs font-bold uppercase font-mono flex items-center gap-1.5">
+              <i class="fa-solid fa-code text-purple-400"></i>
+              Historias de {{ current.name }}
+            </h4>
+            <span class="text-[10px] font-mono bg-purple-950/25 text-purple-400 py-0.5 px-2 rounded-full border border-purple-800/10">
+              {{ storiesCompletedCount(current) }}/{{ filteredStories(current).length }} completadas
+            </span>
+          </div>
+          <div class="relative">
+            <i class="fa-solid fa-magnifying-glass text-text-muted absolute left-3 top-1/2 -translate-y-1/2"></i>
+            <input
+              type="search"
+              [ngModel]="session.storySearchText()"
+              (ngModelChange)="session.storySearchText.set($event)"
+              placeholder="Buscar historia..."
+              class="w-full bg-white/[0.03] border border-white/5 rounded-xl pl-9 pr-3 py-1.5 text-xs text-text-bright focus:outline-none focus:border-purple-400"
+            />
+          </div>
+          <div class="space-y-3 max-h-[350px] overflow-y-auto scrollbar-thin">
+            @for (story of filteredStories(current); track story.code) {
+              <div class="p-3 rounded-xl bg-white/[0.01] border border-white/5 flex flex-col gap-2">
+                <p class="text-xs font-semibold leading-relaxed">{{ story.name }}</p>
+                <div class="flex justify-between text-[10px] font-mono font-bold">
+                  <span class="text-text-muted">{{ story.code }}</span>
+                  <span [class.text-accent-primary]="story.progress === 100" [class.text-accent-info]="story.progress > 0 && story.progress < 100">{{ story.progress }}%</span>
+                </div>
+                <div class="w-full bg-white/[0.03] h-1.5 rounded-full overflow-hidden">
+                  <div
+                    class="h-full transition-all duration-500"
+                    [class.bg-accent-primary]="story.progress === 100"
+                    [class.bg-accent-info]="story.progress > 0 && story.progress < 100"
+                    [class.bg-white/10]="story.progress === 0"
+                    [style.width.%]="story.progress"
+                  ></div>
+                </div>
+                <span class="text-[10px] font-mono font-bold uppercase" [class.text-accent-primary]="story.progress === 100">{{ story.status }}</span>
+              </div>
+            }
+            @if (!filteredStories(current).length) {
+              <p class="text-xs text-text-muted italic text-center py-4">No se encontraron historias</p>
+            }
+          </div>
+        </div>
+      </div>
+    } @else {
+      <div class="max-w-2xl mx-auto w-full demo-glass p-5 rounded-xl flex flex-col gap-4">
+        <h4 class="text-xs font-bold uppercase font-mono flex items-center gap-1.5">
+          <i class="fa-solid fa-comment text-accent-info"></i>
+          Buenas Prácticas del Bloque
+        </h4>
+        <div class="space-y-4 text-xs text-text-muted leading-relaxed">
+          <p><strong class="text-text-bright">Foco y Timebox acotado:</strong> Mantener este espacio ágil. Si un debate requiere más de 5 minutos, agendar refinamiento aparte.</p>
+          <p><strong class="text-text-bright">Audiencia Selectiva:</strong> Quienes no tengan relación con los temas pueden desconectarse.</p>
+          <p><strong class="text-text-bright">Enfoque resolutivo:</strong> Decidir el próximo paso accionable y el responsable.</p>
+        </div>
+      </div>
+    }
+  </div>
+}

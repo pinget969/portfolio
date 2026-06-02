@@ -1,0 +1,49 @@
+<section class="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" id="skills">
+  <div class="text-center max-w-2xl mx-auto mb-16">
+    <span
+      class="text-xs font-bold uppercase tracking-widest text-indigo-400 bg-indigo-500/10 px-3 py-1 rounded-full border border-indigo-500/20"
+      >Habilidades</span
+    >
+    <h2 class="text-3xl sm:text-4xl font-extrabold mt-3">Tecnologías & Conocimientos</h2>
+    <p class="text-slate-400 mt-3 text-base">
+      Un desglose de mis herramientas tecnológicas organizadas por disciplinas y metodologías ágiles.
+    </p>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+    @for (category of skillCategories; track category.id) {
+      <div class="glass-panel p-6 rounded-2xl border border-white/10 space-y-6">
+        <div class="flex items-center gap-3">
+          <span
+            class="p-3 rounded-xl border"
+            [class]="category.iconBg + ' ' + category.iconColor + ' ' + category.iconBorder"
+          >
+            <i [class]="category.icon + ' text-xl'"></i>
+          </span>
+          <div>
+            <h3 class="font-bold text-slate-100 font-sans">{{ category.title }}</h3>
+            <p class="text-xs text-slate-400">{{ category.subtitle }}</p>
+          </div>
+        </div>
+
+        <div class="space-y-4 font-mono">
+          @for (skill of category.skills; track skill.name) {
+            <div>
+              <div class="flex justify-between text-xs text-slate-400 mb-1.5">
+                <span>{{ skill.name }}</span>
+                <span>{{ skill.level }}</span>
+              </div>
+              <div class="w-full h-1.5 bg-dark-950 rounded-full overflow-hidden">
+                <div
+                  class="h-full bg-gradient-to-r rounded-full"
+                  [class]="skill.gradientFrom + ' ' + skill.gradientTo"
+                  [style.width.%]="skill.percent"
+                ></div>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    }
+  </div>
+</section>

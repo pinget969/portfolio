@@ -1,0 +1,156 @@
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start animate-fade-in">
+  <div class="lg:col-span-5 demo-glass p-6 rounded-2xl flex flex-col gap-4">
+    <div>
+      <h2 class="text-xl font-bold text-text-bright flex items-center gap-2">
+        <i class="fa-solid fa-clock-rotate-left text-accent-info"></i>
+        Historial de Sesiones
+      </h2>
+      <p class="text-xs text-text-muted mt-1">
+        Registros demo ({{ session.historySessions().length }}) — en producción se persisten en Firestore
+      </p>
+    </div>
+
+    <div class="flex-1 overflow-y-auto space-y-2.5 max-h-[580px] scrollbar-thin">
+      @for (s of session.historySessions(); track s.id) {
+        <div
+          (click)="selectSession(s)"
+          class="p-3.5 rounded-xl border cursor-pointer transition-all flex flex-col gap-2"
+          [class.bg-accent-info/5]="session.selectedHistorySession()?.id === s.id"
+          [class.border-accent-info/30]="session.selectedHistorySession()?.id === s.id"
+          [class.bg-white/2]="session.selectedHistorySession()?.id !== s.id"
+          [class.border-white/5]="session.selectedHistorySession()?.id !== s.id"
+          [class.hover:bg-white/5]="session.selectedHistorySession()?.id !== s.id"
+        >
+          <span class="text-xs text-text-muted font-mono flex items-center gap-1.5">
+            <i class="fa-solid fa-calendar"></i>
+            {{ formatSessionDate(s.date) }}
+          </span>
+          <div class="flex justify-between items-center">
+            <span class="text-sm font-bold text-text-bright"
+              >{{ s.participantsCount }} expositor{{ s.participantsCount === 1 ? '' : 'es' }}</span
+            >
+            <span
+              class="text-xs font-mono font-bold text-accent-info bg-accent-info/10 py-0.5 px-2.5 rounded-full border border-accent-info/10"
+              >{{ formatTime(s.globalTimer) }}</span
+            >
+          </div>
+          @if (s.projectKeys.length) {
+            <div class="flex gap-1 flex-wrap">
+              @for (k of s.projectKeys; track k) {
+                <span class="text-[10px] uppercase font-mono bg-white/5 border border-white/10 py-0.5 px-1.5 rounded">{{
+                  k
+                }}</span>
+              }
+            </div>
+          }
+        </div>
+      }
+    </div>
+  </div>
+
+  <div class="lg:col-span-7">
+    @if (session.selectedHistorySession(); as selected) {
+      <div class="demo-glass p-6 sm:p-8 rounded-2xl flex flex-col gap-6">
+        <div class="flex justify-between items-start border-b border-white/5 pb-5">
+          <div>
+            <span class="text-xs text-accent-info font-bold uppercase font-mono">Métricas de Sesión</span>
+            <h3 class="text-2xl font-bold text-text-bright mt-1">Detalle General del Equipo</h3>
+            <p class="text-xs text-text-muted mt-0.5">Iniciado: {{ formatSessionDateLong(selected.date) }}</p>
+          </div>
+          <div class="text-right">
+            <span class="text-xs text-text-muted uppercase font-mono">Duración Total</span>
+            <div class="text-2xl font-black font-mono text-accent-info">{{ formatTime(selected.globalTimer) }}</div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+          <div class="p-3 bg-white/[0.01] border border-white/5 rounded-xl text-center">
+            <span class="text-[10px] text-text-muted font-bold uppercase block">Promedio p/p</span>
+            <span class="text-base font-bold font-mono">{{ formatTime(averageForSession(selected)) }}</span>
+          </div>
+          <div class="p-3 bg-white/[0.01] border border-white/5 rounded-xl text-center">
+            <span class="text-[10px] text-text-muted font-bold uppercase block">Pausas</span>
+            <span class="text-base font-bold font-mono"
+              >{{ selected.pauseCount }} ({{ formatTime(selected.totalPauseSeconds) }})</span
+            >
+          </div>
+          <div class="p-3 bg-white/[0.01] border border-white/5 rounded-xl text-center col-span-2 sm:col-span-1">
+            <span class="text-[10px] text-text-muted font-bold uppercase block">Puntualidad</span>
+            <span
+              class="text-base font-bold font-mono"
+              [class.text-accent-danger]="selected.delaySeconds > 0"
+              [class.text-accent-primary]="selected.delaySeconds < 0"
+            >
+              @if (selected.delaySeconds > 0) {
+                +{{ formatTime(selected.delaySeconds) }}
+              } @else if (selected.delaySeconds < 0) {
+                -{{ formatTime(Math.abs(selected.delaySeconds)) }}
+              } @else {
+                Exacto
+              }
+            </span>
+          </div>
+        </div>
+
+        <div class="overflow-x-auto max-h-[300px] overflow-y-auto border border-white/5 rounded-xl scrollbar-thin">
+          <table class="w-full text-left text-xs">
+            <thead>
+              <tr class="border-b border-white/10 bg-white/[0.02]">
+                <th class="py-2.5 px-3 font-semibold text-text-muted">Nombre</th>
+                <th class="py-2.5 px-3 font-semibold text-text-muted text-center">Tiempos</th>
+                <th class="py-2.5 px-3 font-semibold text-text-muted text-right">Clasificación</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-white/5">
+              @for (res of selected.results; track res.name + $index) {
+                <tr>
+                  <td class="py-2.5 px-3 font-bold text-text-bright">{{ res.name }}</td>
+                  <td class="py-2.5 px-3 font-mono text-center">
+                    @if (res.skipped) {
+                      Ausente
+                    } @else {
+                      {{ formatTime(res.time) }}
+                    }
+                  </td>
+                  <td class="py-2.5 px-3 text-right">
+                    <span>{{ getResultClassification(res).emoji }}</span>
+                    <span class="text-[10px] text-text-muted ml-1">{{ getResultClassification(res).text }}</span>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+
+        <button
+          type="button"
+          (click)="session.selectHistorySession(null)"
+          class="text-xs font-semibold py-2 px-4 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 self-end cursor-pointer"
+        >
+          Cerrar detalle
+        </button>
+      </div>
+    } @else {
+      <div class="demo-glass p-8 rounded-2xl flex flex-col justify-center items-center text-center gap-4 py-24">
+        <p class="text-lg font-bold text-text-bright">Ninguna sesión seleccionada</p>
+        <p class="text-xs text-text-muted max-w-[280px]">
+          Hacé clic en una sesión del historial para ver el detalle de métricas.
+        </p>
+        @if (session.historySessions().length) {
+          <div class="mt-4 border-t border-white/5 pt-6 grid grid-cols-2 gap-4 w-full max-w-[360px] text-left">
+            <div>
+              <span class="text-[10px] text-text-muted font-bold uppercase block">Total Dailies</span>
+              <span class="text-xl font-mono font-bold text-accent-info"
+                >{{ session.historySessions().length }} demo</span
+              >
+            </div>
+            <div>
+              <span class="text-[10px] text-text-muted font-bold uppercase block">Promedio reunión</span>
+              <span class="text-xl font-mono font-bold text-accent-info">{{ avgAllSessions() }}</span>
+            </div>
+          </div>
+        }
+      </div>
+    }
+  </div>
+</div>

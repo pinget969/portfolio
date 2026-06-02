@@ -1,0 +1,111 @@
+<section class="py-20 relative bg-dark-900/40 border-y border-white/5 daily-demo" id="playground">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-8">
+    <div class="text-center max-w-3xl mx-auto">
+      <span
+        class="text-xs font-bold uppercase tracking-widest text-indigo-400 bg-indigo-500/10 px-3 py-1 rounded-full border border-indigo-500/20"
+        >Demo interactiva</span
+      >
+      <h2 class="text-3xl sm:text-4xl font-extrabold mt-3 text-slate-100">
+        Daily Scrum Master — Demo en vivo
+      </h2>
+      <p class="text-slate-400 mt-3 text-base">
+        Probá el flujo real: gestión de equipo iceScrum, cronómetros por speaker, tareas del sprint y
+        resumen con métricas. Datos simulados —
+        <a
+          [href]="productionUrl"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-accent-info hover:underline"
+          >app en producción</a
+        >.
+      </p>
+    </div>
+  </div>
+
+  <div
+    class="max-w-[1200px] mx-auto px-4 rounded-2xl overflow-hidden border border-white/10 bg-bg-deep text-text-main min-h-[600px] flex flex-col"
+  >
+    <header class="border-b border-white/5 bg-bg-surface/50 backdrop-blur-md sticky top-0 z-50">
+      <div class="px-4 py-4 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div
+            class="p-2.5 rounded-xl bg-gradient-to-tr from-accent-info/20 to-purple-500/20 text-accent-info border border-accent-info/20"
+          >
+            <i class="fa-solid fa-calendar-check text-xl"></i>
+          </div>
+          <span
+            class="text-xl font-bold tracking-tight bg-gradient-to-r from-accent-info via-purple-400 to-white bg-clip-text text-transparent"
+          >
+            Daily Scrum Master
+          </span>
+        </div>
+
+        <div class="flex items-center gap-4">
+          @if (session.view() !== 'active') {
+            <nav
+              class="flex items-center gap-1 bg-white/[0.04] p-1 rounded-xl border border-white/5"
+              aria-label="Navegación principal"
+            >
+              <button
+                type="button"
+                (click)="setDailyTab()"
+                class="py-1.5 px-4 text-xs font-bold rounded-lg transition-all cursor-pointer"
+                [class.bg-accent-info]="session.activeTab() === 'daily'"
+                [class.text-bg-deep]="session.activeTab() === 'daily'"
+                [class.shadow-md]="session.activeTab() === 'daily'"
+                [class.text-text-muted]="session.activeTab() !== 'daily'"
+                [class.hover:text-text-bright]="session.activeTab() !== 'daily'"
+              >
+                Daily
+              </button>
+              <button
+                type="button"
+                (click)="setHistorialTab()"
+                class="py-1.5 px-4 text-xs font-bold rounded-lg transition-all cursor-pointer"
+                [class.bg-accent-info]="session.activeTab() === 'historial'"
+                [class.text-bg-deep]="session.activeTab() === 'historial'"
+                [class.shadow-md]="session.activeTab() === 'historial'"
+                [class.text-text-muted]="session.activeTab() !== 'historial'"
+                [class.hover:text-text-bright]="session.activeTab() !== 'historial'"
+              >
+                Historial
+              </button>
+            </nav>
+          }
+
+          @if (session.view() === 'active') {
+            <div
+              class="demo-glass py-2 px-5 rounded-full flex items-center gap-3 border border-white/10"
+            >
+              <span
+                class="w-3.5 h-3.5 rounded-full animate-pulse"
+                [class]="session.timerDotColor()"
+              ></span>
+              <span class="font-mono font-bold text-lg text-text-bright">{{
+                formatTime(session.globalTimer())
+              }}</span>
+              <span class="text-xl">{{ session.timerEmoji() }}</span>
+            </div>
+          }
+        </div>
+      </div>
+    </header>
+
+    <div class="px-4 py-6 flex-1 flex flex-col">
+      @if (session.activeTab() === 'daily') {
+        @if (session.view() === 'setup') {
+          <app-setup-view />
+        }
+        @if (session.view() === 'active') {
+          <app-active-view />
+        }
+        @if (session.view() === 'summary') {
+          <app-summary-view />
+        }
+      }
+      @if (session.activeTab() === 'historial') {
+        <app-historial-view />
+      }
+    </div>
+  </div>
+</section>
