@@ -36,11 +36,28 @@ npm run build
 
 El output queda en `dist/portfolio/browser`.
 
+## CI/CD
+
+| Workflow | Cuándo corre | Qué hace |
+|----------|--------------|----------|
+| [`.github/workflows/ci.yml`](.github/workflows/ci.yml) | Push y PR a `main` | `npm test` (sin watch) + build de producción |
+| [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) | Tras CI exitoso en `main` | Publica en GitHub Pages |
+
+Flujo: los tests deben pasar en CI; solo entonces se dispara el deploy.
+
+Activá GitHub Pages con source **GitHub Actions** en **Settings → Pages** del repo.
+
+Para ejecutar los tests como en CI (local):
+
+```bash
+npm test -- --watch=false
+```
+
 ## Deploy a GitHub Pages
 
-### Opción A — CI automático
+### Opción A — Automático (recomendado)
 
-El workflow [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) despliega automáticamente al hacer push a `main`. Activá GitHub Pages con source **GitHub Actions** en la configuración del repo.
+Push a `main` → CI → deploy a Pages.
 
 ### Opción B — Manual
 
@@ -67,4 +84,4 @@ src/app/
 | `npm start` | Servidor de desarrollo |
 | `npm run build` | Build de producción |
 | `npm run deploy` | Build + deploy a GitHub Pages |
-| `npm test` | Tests unitarios |
+| `npm test` | Tests unitarios (en CI: `npm test -- --watch=false`) |
