@@ -48,7 +48,7 @@ El workflow [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) despl
 npm run deploy
 ```
 
-> **Nota:** El `baseHref` está configurado como `/Portfolio/` en [`angular.json`](angular.json). Si tu repo de GitHub tiene otro nombre, actualizalo en la configuración de producción.
+> **Nota:** El `baseHref` está configurado como `/portfolio/` en [`angular.json`](angular.json). Debe coincidir con el nombre del repo en GitHub (p. ej. `https://pinget969.github.io/portfolio/`).
 
 ## Estructura del proyecto
 

@@ -31,7 +31,7 @@
           },
           "configurations": {
             "production": {
-              "baseHref": "/Portfolio/",
+              "baseHref": "/portfolio/",
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
