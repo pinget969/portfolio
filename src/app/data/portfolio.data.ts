@@ -21,7 +21,7 @@ export const PROJECTS: Project[] = [
       result:
         'SaaS 100% operativo en producción. Los clientes de los talleres ahora diseñan en vivo, acelerando los tiempos de venta del rubro.',
     },
-    tags: ['Angular', 'Go'],
+    tags: ['Angular', 'Go', 'PostgreSQL', 'MercadoPago', 'Pintrest API'],
     linkLabel: 'Probar SaaS',
     linkColor: 'text-emerald-400 hover:text-emerald-300',
     url: 'https://printy.ar/',
@@ -44,7 +44,7 @@ export const PROJECTS: Project[] = [
       result:
         'Un gestor automatizado en producción que controla tiempos, expone el backlog en vivo durante la Daily y entrega reportes listos para el equipo ágil.',
     },
-    tags: ['iceScrum API', 'Go Proxy', 'Firestore'],
+    tags: ['React', 'Node-js','Firestore', 'iceScrum API'],
     linkLabel: 'Iniciar Daily',
     linkColor: 'text-indigo-400 hover:text-indigo-300',
     url: 'https://daily-scrum-master-102741510725.us-west1.run.app/',
@@ -57,7 +57,7 @@ export const PROJECTS: Project[] = [
     categoryIcon: 'fa-solid fa-book-open',
     categoryColor: 'text-violet-400',
     gradientTo: 'to-emerald-950',
-    badge: 'Mercado Pago',
+    badge: 'Google AI Studio',
     star: {
       situation:
         'Los embudos de venta tradicionales de libros digitales son planos, pasivos y tienen una tasa de conversión predecible y baja.',
@@ -81,7 +81,7 @@ export const EXPERIENCES: Experience[] = [
     title: 'Frontend Tech Lead & Specialist Developer',
     company: 'Health Management Solutions',
     period: '04/2023 - Presente',
-    location: 'Santa Fe, Argentina',
+    location: 'Remoto - Buenos Aires, Argentina',
     badge: 'Liderazgo Técnico',
     badgeStyle: 'active',
     highlights: [
@@ -90,7 +90,7 @@ export const EXPERIENCES: Experience[] = [
       '<strong>Traducción de Historias de Usuario:</strong> Colaboración activa con gerentes de producto e infraestructura para modelar APIs RESTful, garantizando un correcto flujo cliente-servidor.',
       '<strong>Code Reviews:</strong> Aseguro la calidad final y la cohesión de la base de código frente a los criterios de aceptación y arquitectura de negocio establecidos.',
     ],
-    tags: ['Angular', 'TypeScript', 'Scrum Liderazgo', 'Apex', 'PL/SQL & SQL'],
+    tags: ['Angular', 'TypeScript', 'Node.js', 'Scrum Liderazgo', 'Apex', 'PL/SQL & SQL', 'MongoDB'],
   },
   {
     id: 'semillero',
@@ -130,7 +130,7 @@ export const SKILL_CATEGORIES: SkillCategory[] = [
     skills: [
       { name: 'Angular (Standalone & Signals)', level: 'Avanzado', percent: 95, gradientFrom: 'from-red-500', gradientTo: 'to-indigo-500' },
       { name: 'TypeScript & JavaScript', level: 'Avanzado', percent: 90, gradientFrom: 'from-yellow-500', gradientTo: 'to-indigo-500' },
-      { name: 'CSS3 (Tailwind CSS)', level: 'Avanzado', percent: 90, gradientFrom: 'from-emerald-500', gradientTo: 'to-indigo-500' },
+      { name: 'CSS, SCSS, Tailwind & Material', level: 'Avanzado', percent: 90, gradientFrom: 'from-emerald-500', gradientTo: 'to-indigo-500' },
     ],
   },
   {
@@ -142,9 +142,9 @@ export const SKILL_CATEGORIES: SkillCategory[] = [
     iconColor: 'text-cyan-400',
     iconBorder: 'border-cyan-500/20',
     skills: [
-      { name: 'Go (Golang) Microservicios', level: 'Intermedio', percent: 75, gradientFrom: 'from-cyan-400', gradientTo: 'to-indigo-500' },
-      { name: 'PL/SQL & SQL (Oracle, MySQL)', level: 'Avanzado', percent: 85, gradientFrom: 'from-emerald-500', gradientTo: 'to-indigo-500' },
-      { name: 'Java & Spring Boot', level: 'Intermedio', percent: 70, gradientFrom: 'from-blue-400', gradientTo: 'to-indigo-500' },
+      { name: 'Go (Golang) & Node.js Microservicios', level: 'Intermedio', percent: 75, gradientFrom: 'from-cyan-400', gradientTo: 'to-indigo-500' },
+      { name: 'PL/SQL & SQL (Oracle, MySQL, PostgreSQL, MongoDB)', level: 'Intermedio', percent: 75, gradientFrom: 'from-emerald-500', gradientTo: 'to-indigo-500' },
+      { name: 'Java & Spring Boot', level: 'Básico', percent: 60, gradientFrom: 'from-blue-400', gradientTo: 'to-indigo-500' },
     ],
   },
   {
@@ -156,9 +156,9 @@ export const SKILL_CATEGORIES: SkillCategory[] = [
     iconColor: 'text-violet-400',
     iconBorder: 'border-violet-500/20',
     skills: [
-      { name: 'SDD (Spec Driven Dev)', level: 'Experto', percent: 95, gradientFrom: 'from-violet-500', gradientTo: 'to-indigo-500' },
-      { name: 'Prompting & Google AI Studio', level: 'Avanzado', percent: 90, gradientFrom: 'from-indigo-500', gradientTo: 'to-violet-500' },
+      { name: 'Prompting & SDD (Spec Driven Dev)', level: 'Experto', percent: 95, gradientFrom: 'from-violet-500', gradientTo: 'to-indigo-500' },
       { name: 'Scrum & Code Reviews', level: 'Avanzado', percent: 90, gradientFrom: 'from-emerald-500', gradientTo: 'to-indigo-500' },
+      { name: 'Google AI Studio', level: 'Intermedio', percent: 80, gradientFrom: 'from-indigo-500', gradientTo: 'to-violet-500' },
     ],
   },
 ];
