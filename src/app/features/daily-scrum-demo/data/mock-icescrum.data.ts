@@ -7,7 +7,7 @@ import {
 } from '../models/daily-demo.model';
 
 export const PRODUCTION_DAILY_URL =
-  'https://daily-scrum-master-102741510725.us-west1.run.app/';
+  'https://daily-sm.netlify.app/';
 
 export const MOCK_SPRINT_NAME = 'R5S18';
 

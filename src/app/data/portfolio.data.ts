@@ -34,7 +34,7 @@ export const PROJECTS: Project[] = [
     categoryIcon: 'fa-solid fa-clock-rotate-left',
     categoryColor: 'text-indigo-400',
     gradientTo: 'to-violet-950',
-    badge: 'Google AI Studio',
+    badge: 'React + Node.js',
     star: {
       situation:
         'Las reuniones diarias ágiles requerían un control estricto de tiempos y sistematización para evitar desvíos e ineficiencias.',
@@ -47,7 +47,7 @@ export const PROJECTS: Project[] = [
     tags: ['React', 'Node-js','Firestore', 'iceScrum API'],
     linkLabel: 'Iniciar Daily',
     linkColor: 'text-indigo-400 hover:text-indigo-300',
-    url: 'https://daily-scrum-master-102741510725.us-west1.run.app/',
+    url: 'https://daily-sm.netlify.app/',
   },
   {
     id: 'filosofar',
@@ -57,7 +57,7 @@ export const PROJECTS: Project[] = [
     categoryIcon: 'fa-solid fa-book-open',
     categoryColor: 'text-violet-400',
     gradientTo: 'to-emerald-950',
-    badge: 'Google AI Studio',
+    badge: 'React + Node.js',
     star: {
       situation:
         'Los embudos de venta tradicionales de libros digitales son planos, pasivos y tienen una tasa de conversión predecible y baja.',
